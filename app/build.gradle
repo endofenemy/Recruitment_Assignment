@@ -12,7 +12,7 @@ android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.githubrepo"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -75,4 +75,8 @@ dependencies {
     implementation group: 'androidx.navigation', name: 'navigation-ui-ktx', version: '2.2.0'
 
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
 }

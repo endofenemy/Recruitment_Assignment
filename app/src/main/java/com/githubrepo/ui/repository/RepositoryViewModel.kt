@@ -5,10 +5,13 @@ import com.githubrepo.data.repository.GithubRepository
 import com.githubrepo.utils.lazyDeferred
 
 class RepositoryViewModel(
-    repository: GithubRepository
+    repository: GithubRepository,
+    forcefully: Boolean
 ) : ViewModel() {
 
+
     val repository by lazyDeferred {
-        repository.getRepository()
+        repository.getRepository(forcefully)
     }
+
 }
