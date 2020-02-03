@@ -1,9 +1,11 @@
 package com.githubrepo.ui.repository
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,8 +28,10 @@ class RepositoryActivity : AppCompatActivity() {
     private lateinit var api: MyApi
     private lateinit var networkConnectionInterceptor: NetworkConnectionInterceptor
     private lateinit var preferenceProvider: PreferenceProvider
+    private lateinit var repositoryAdapter: RepositoryAdapter
 
     private lateinit var viewModel: RepositoryViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,6 +45,7 @@ class RepositoryActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this, factory).get(RepositoryViewModel::class.java)
 
+        setupToolbar()
         shimmer_view_container.startShimmerAnimation()
 
         Coroutines.main {
@@ -53,11 +58,13 @@ class RepositoryActivity : AppCompatActivity() {
                     error_layout.visibility = View.GONE
                     // Setup Recycler view
                     recycler_view.layoutManager = LinearLayoutManager(this)
-                    recycler_view.adapter = RepositoryAdapter(it)
+                    repositoryAdapter = RepositoryAdapter(it)
+                    recycler_view.adapter = repositoryAdapter
                     recycler_view.visibility = View.VISIBLE
                 } else {
                     error_layout.visibility = View.VISIBLE
                 }
+                refresh.isRefreshing = false
             })
         }
 
@@ -66,6 +73,39 @@ class RepositoryActivity : AppCompatActivity() {
                 repository.fetchRepository(true)
             }
         }
+
+        refresh.setOnRefreshListener {
+            refresh.isRefreshing = true
+            retry.performClick()
+        }
+    }
+
+    private fun setupToolbar() {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.setTitle("")
+        setSupportActionBar(toolbar)
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.sort_stars -> {
+                repositoryAdapter?.let {
+                    repositoryAdapter.sortByStars()
+                }
+            }
+            R.id.sort_name -> {
+                repositoryAdapter?.let {
+                    repositoryAdapter.sortByName()
+                }
+            }
+        }
+        return true
     }
 
 }

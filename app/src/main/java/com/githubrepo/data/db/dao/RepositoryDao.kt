@@ -16,4 +16,7 @@ interface RepositoryDao {
     @Query("SELECT * FROM REPOSITORY")
     fun getAllRepository(): LiveData<List<Repository>>
 
+    @Query("DELETE FROM REPOSITORY")
+    fun deleteAllFromTable()
+
 }

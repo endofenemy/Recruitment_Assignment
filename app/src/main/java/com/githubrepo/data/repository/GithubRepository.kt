@@ -63,6 +63,7 @@ class GithubRepository(
     private fun saveRepository(repository: List<Repository>) {
         Coroutines.io {
             preferences.saveLastSavedAt(System.currentTimeMillis().toString())
+            db.getRepositoryDao().deleteAllFromTable()
             db.getRepositoryDao().saveAllRepository(repository)
         }
     }

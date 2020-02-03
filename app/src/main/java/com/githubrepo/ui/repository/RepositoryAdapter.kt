@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.githubrepo.R
 import com.githubrepo.data.db.entities.Repository
 import com.githubrepo.databinding.ItemRepoListBinding
+import java.util.*
+
 
 private var currentPosition: Int? = null
 private lateinit var context: Context
@@ -60,5 +62,20 @@ class RepositoryAdapter(
                 notifyItemChanged(position)
             }
         }
+    }
+
+    fun sortByStars() {
+        Collections.sort(
+            repositoryList
+        ) { t, t2 -> t2.stars!!.compareTo(t.stars!!) }
+
+        notifyDataSetChanged()
+    }
+
+    fun sortByName() {
+        Collections.sort(
+            repositoryList
+        ) { t, t2 -> t.author!!.compareTo(t2.author!!) }
+        notifyDataSetChanged()
     }
 }
